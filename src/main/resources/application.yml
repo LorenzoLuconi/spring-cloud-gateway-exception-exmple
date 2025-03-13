@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: MY_ROUTE
+          predicates:
+            - Path=/test
+          filters:
+            - SetPath=/anything
+            # - MyRemoveResponseHeader=Server
+            - RemoveResponseHeader=Server
+            - name: RequestRateLimiter
+              args:
+                # key-resolver: "#{@myKeyResolver}"
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
+          uri: https://httpbin.org
